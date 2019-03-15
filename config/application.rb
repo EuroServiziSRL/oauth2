@@ -45,7 +45,7 @@ module Oes
       
     end
   
-  
+    config.autoload_paths << "#{Rails.root}/lib"
   
   end
 end

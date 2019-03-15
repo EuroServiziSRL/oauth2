@@ -39,10 +39,10 @@ class CreateDoorkeeperTables < ActiveRecord::Migration[5.2]
       # characters. More info on custom token generators in:
       # https://github.com/doorkeeper-gem/doorkeeper/tree/v3.0.0.rc1#custom-access-token-generator
       #
-      # t.text     :token,             null: false
-      t.string   :token,                  null: false
+      t.text     :token,             null: false
+      #t.string   :token,                  null: false
 
-      t.string   :refresh_token
+      t.text   :refresh_token
       t.integer  :expires_in
       t.datetime :revoked_at
       t.datetime :created_at,             null: false
@@ -57,8 +57,8 @@ class CreateDoorkeeperTables < ActiveRecord::Migration[5.2]
       t.string   :previous_refresh_token, null: false, default: ""
     end
 
-    add_index :oauth_access_tokens, :token, unique: true
-    add_index :oauth_access_tokens, :refresh_token, unique: true
+    #add_index :oauth_access_tokens, :token, unique: true
+    #add_index :oauth_access_tokens, :refresh_token, unique: true
     add_foreign_key(
       :oauth_access_tokens,
       :oauth_applications,

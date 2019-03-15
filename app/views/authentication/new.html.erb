@@ -1,5 +1,8 @@
-<h3>Login</h3>
+<div id="nuova_autenticazione">
+    <span id="nome_ente" valore="<%=@nome_ente%>"></span>
+    <span id="redirect_uri" valore="<%=@redirect_uri%>"></span>
+    <div id="msg_errore" class="alert alert-danger <%= (@errore.blank? ? 'd-none' : '') %>"><%=@errore%></div>
+    <div id="react_component"></div>
+    
+</div>
 
-<div id='example-app'></div>
-******************************
-<div id="login-form"></div>

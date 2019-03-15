@@ -2,3 +2,5 @@
 
 # Add new mime types for use in respond_to blocks:
 # Mime::Type.register "text/richtext", :rtf
+Mime::Type.register "application/json", :json, ['text/x-json', 'application/jsonrequest', 'application/json;charset=utf-8']
+

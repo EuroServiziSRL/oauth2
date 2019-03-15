@@ -8,13 +8,9 @@
 
   <%= stylesheet_link_tag "doorkeeper/application" %>
   
-  <%= javascript_pack_tag 'login/index' %>
-  <%= stylesheet_pack_tag 'login/assets/stylesheets/app' %>
-  
   <%= csrf_meta_tags %>
 </head>
 <body>
-  application!!
 <div id="container">
   <%- if flash[:notice].present? %>
     <div class="alert alert-info">

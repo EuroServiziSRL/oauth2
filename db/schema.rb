@@ -10,9 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_01_153634) do
+ActiveRecord::Schema.define(version: 2019_03_12_121852) do
 
-  create_table "oauth_access_grants", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "oauth_access_grants", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "resource_owner_id", null: false
     t.bigint "application_id", null: false
     t.string "token", null: false
@@ -21,6 +21,7 @@ ActiveRecord::Schema.define(version: 2019_02_01_153634) do
     t.datetime "created_at", null: false
     t.datetime "revoked_at"
     t.string "scopes"
+    t.text "user_data"
     t.index ["application_id"], name: "index_oauth_access_grants_on_application_id"
     t.index ["resource_owner_id"], name: "index_oauth_access_grants_on_resource_owner_id"
     t.index ["token"], name: "index_oauth_access_grants_on_token", unique: true
@@ -29,17 +30,16 @@ ActiveRecord::Schema.define(version: 2019_02_01_153634) do
   create_table "oauth_access_tokens", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "resource_owner_id"
     t.bigint "application_id"
-    t.string "token", null: false
-    t.string "refresh_token"
+    t.text "token", null: false
+    t.text "refresh_token"
     t.integer "expires_in"
     t.datetime "revoked_at"
     t.datetime "created_at", null: false
     t.string "scopes"
     t.string "previous_refresh_token", default: "", null: false
+    t.text "user_data"
     t.index ["application_id"], name: "index_oauth_access_tokens_on_application_id"
-    t.index ["refresh_token"], name: "index_oauth_access_tokens_on_refresh_token", unique: true
     t.index ["resource_owner_id"], name: "index_oauth_access_tokens_on_resource_owner_id"
-    t.index ["token"], name: "index_oauth_access_tokens_on_token", unique: true
   end
 
   create_table "oauth_applications", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -56,13 +56,6 @@ ActiveRecord::Schema.define(version: 2019_02_01_153634) do
     t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true
   end
 
-  create_table "oauth_openid_requests", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.integer "access_grant_id", null: false
-    t.string "nonce", null: false
-    t.index ["access_grant_id"], name: "fk_rails_77114b3b09"
-  end
-
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
-  add_foreign_key "oauth_openid_requests", "oauth_access_grants", column: "access_grant_id"
 end

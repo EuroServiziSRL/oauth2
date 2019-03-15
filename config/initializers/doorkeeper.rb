@@ -15,30 +15,45 @@ Doorkeeper.configure do
   
   
   #Qui viene fatta l'autenticazione
-  # 1
+  # 1 - 2 - 4
   #Arriva
   # {"client_id"=>"87256f9997efa4921aadd4caa1940134210d31b59f5685a2f3067d3de0e520fd", 
-  # "redirect_uri"=>"urn:ietf:wg:oauth:2.0:oob", 
+  # "redirect_uri"=>"http://localhost:8080/portal/autenticazione/auth/oauth2/oauth2_callback", 
   # "response_type"=>"code", 
-  # "scope"=>"", 
+  # "scope"=>"openid", 
   # "controller"=>"doorkeeper/authorizations",
   # "action"=>"new"}
   
+  
   resource_owner_authenticator do
-    debugger
     #qui faccio la chiamata al portale (ricavo dal redirect_url l'url da chiamare)
     #se trovo utente ritorno un oggetto user, altrimenti nil
-    
     #user_hash = {:id =>1, :name => 'John', :username => 'Doe'}
     #user = OpenStruct.new(user_hash) 
     #p os.name
-    user = nil
-    if !user.blank?# = UserSession.find.try(:record)
+    
+    if !request.params.blank? && request.params[:client_id].nil?
+      request.params ||= {}
+      request.params[:redirect_uri] = session[:redirect_uri] #url di callback del portale
+      request.params[:client_id] = session[:client_id]
+      request.params[:scope] = session[:scope]
+      request.params[:response_type] = session[:response_type]
+    else
+      session[:redirect_uri] = request.params[:redirect_uri] #url di callback del portale
+      session[:client_id] = request.params[:client_id]
+      session[:scope] = request.params[:scope]
+      session[:response_type] = request.params[:response_type]
+    end
+    
+    #session['user'] = {:id =>1, :name => 'John', :username => 'Doe'}
+    
+    if !session['user'].blank?
+      user = OpenStruct.new(session['user'])
       user
     else
-      session[:return_to] = request.url
       #redirect_to(auth_sign_in_url)
       redirect_to authentication_new_url
+      nil
     end
   end
 
@@ -47,13 +62,12 @@ Doorkeeper.configure do
  
 
   # For Password Grant
-  resource_owner_from_credentials do |routes|
-    debugger
-    user = User.find_by_email(params[:username].downcase)
-    if user && user.valid_password?(params[:password])
-      user
-    end
-  end
+  # resource_owner_from_credentials do |routes|
+  #   user = User.find_by_email(params[:username].downcase)
+  #   if user && user.valid_password?(params[:password])
+  #     user
+  #   end
+  # end
 
   # If you didn't skip applications controller from Doorkeeper routes in your application routes.rb
   # file then you need to declare this block in order to restrict access to the web interface for
@@ -107,6 +121,7 @@ Doorkeeper.configure do
   # See https://github.com/doorkeeper-gem/doorkeeper#custom-access-token-generator
   #
   
+  #access_token_generator '::CustomToken'
   access_token_generator '::Doorkeeper::JWT'
 
   # The controller Doorkeeper::ApplicationController inherits from.
@@ -153,10 +168,11 @@ Doorkeeper.configure do
   # For more information go to
   # https://github.com/doorkeeper-gem/doorkeeper/wiki/Using-Scopes
   #
-  # default_scopes  :public
+  default_scopes  :public
   # optional_scopes :write, :update
-
-  optional_scopes :openid
+  
+  # default_scopes  :public
+  # optional_scopes :openid
 
   # Change the way client credentials are retrieved from the request object.
   # By default it retrieves first from the `HTTP_AUTHORIZATION` header, then
@@ -164,7 +180,8 @@ Doorkeeper.configure do
   # Check out https://github.com/doorkeeper-gem/doorkeeper/wiki/Changing-how-clients-are-authenticated
   # for more information on customization
   #
-  # client_credentials :from_basic, :from_params
+  client_credentials :from_basic, :from_params
+  #client_credentials :from_params
 
   # Change the way access token is authenticated from the request object.
   # By default it retrieves first from the `HTTP_AUTHORIZATION` header, then
@@ -172,7 +189,8 @@ Doorkeeper.configure do
   # Check out https://github.com/doorkeeper-gem/doorkeeper/wiki/Changing-how-clients-are-authenticated
   # for more information on customization
   #
-  # access_token_methods :from_bearer_authorization, :from_access_token_param, :from_bearer_param
+  #access_token_methods :from_basic_authorization, :from_bearer_authorization, :from_access_token_param, :from_bearer_param
+  access_token_methods :from_access_token_param
 
   # Change the native redirect uri for client apps
   # When clients register with the following redirect uri, they won't be redirected to any server and
@@ -180,8 +198,11 @@ Doorkeeper.configure do
   # The value can be any string. Use nil to disable this feature. When disabled, clients must provide a valid URL
   # (Similar behaviour: https://developers.google.com/accounts/docs/OAuth2InstalledApp#choosingredirecturi)
   #
-  # native_redirect_uri 'urn:ietf:wg:oauth:2.0:oob'
-
+  #native_redirect_uri 'urn:ietf:wg:oauth:2.0:oob'
+  
+  #native_redirect_uri 'urn:ietf:wg:oauth:2.0:oob'
+  native_redirect_uri nil
+  
   # Forces the usage of the HTTPS protocol in non-native redirect uris (enabled
   # by default in non-development environments). OAuth2 delegates security in
   # communication to the HTTPS protocol so it is wise to keep this enabled.
@@ -234,8 +255,10 @@ Doorkeeper.configure do
   # grant_flows %w[authorization_code client_credentials]
 
   #impostazione per OpenID connect
-  grant_flows %w(authorization_code implicit_oidc)
+  #grant_flows %w(authorization_code client_credentials implicit_oidc)
 
+  #grant_flows %w(authorization_code client_credentials)
+  grant_flows %w(authorization_code)
 
   # Hook into the strategies' request & response life-cycle in case your
   # application needs advanced customization or logging:
@@ -255,12 +278,22 @@ Doorkeeper.configure do
   #   Rails.logger.info(params.inspect)
   # end
   #
-  # after_successful_authorization do |controller|
-  #   controller.session[:logout_urls] <<
-  #     Doorkeeper::Application
-  #       .find_by(controller.request.params.slice(:redirect_uri))
-  #       .logout_uri
-  # end
+  #Dopo aver creato l'access token arrivo qui e aggiorno il record
+  after_successful_authorization do |controller|
+    if controller.request.params['response_type'] == 'code'
+      hash_user = controller.request.session['user']
+      #carico l'ultimo record della oauth_access_grant che contiene l'access token e salvo i dati dell'utente
+      oat_user = Doorkeeper::AccessGrant.where(resource_owner_id: hash_user['id'], application_id: hash_user['application_id']).last
+      unless oat_user.blank?
+        oat_user.user_data = hash_user.to_json
+        oat_user.save
+        #cancello i vecchi access_grant
+        oat_old = Doorkeeper::AccessGrant.where.not(id: oat_user.id ).where(resource_owner_id: hash_user['id'], application_id: hash_user['application_id'])
+        oat_old.destroy_all
+      end
+    end
+    
+  end
 
   # Under some circumstances you might want to have applications auto-approved,
   # so that the user skips the authorization step.
@@ -270,7 +303,7 @@ Doorkeeper.configure do
   #   client.superapp? or resource_owner.admin?
   # end
   
-  # 2 Qui arriva
+  # 3 Qui arriva
   # resource_owner
   #<OpenStruct id=1, name="John", username="Doe">
   # client
@@ -280,48 +313,60 @@ Doorkeeper.configure do
  #created_at: "2019-01-30 16:40:28", updated_at: "2019-02-04 10:39:13", image_url: nil, tipo_login: nil>>
  
   skip_authorization do |resource_owner, client|
-    debugger
     true
   end
+
+  # resource_owner_from_credentials do |routes|
+  
+   
+  # end
+
 
   # WWW-Authenticate Realm (default "Doorkeeper").
   #
   # realm "Doorkeeper"
 end
 
+  
 
+
+#passa per creare jwt
 Doorkeeper::JWT.configure do
   # Set the payload for the JWT token. This should contain unique information
   # about the user. Defaults to a randomly generated token in a hash:
   #     { token: "RANDOM-TOKEN" }
   token_payload do |opts|
-    debugger
-    user = User.find(opts[:resource_owner_id])
-
+    #cerco access token ultimo per questo resource owner e application
+    #user = User.find(opts[:resource_owner_id])
+    oat_user = Doorkeeper::AccessGrant.where(resource_owner_id: opts[:resource_owner_id], application_id: opts[:application]).last
     {
-      iss: 'My App',
+      iss: 'OES',
       iat: Time.current.utc.to_i,
 
       # @see JWT reserved claims - https://tools.ietf.org/html/draft-jones-json-web-token-07#page-7
       jti: SecureRandom.uuid,
 
-      user: {
-        id: user.id,
-        email: user.email
-      }
+      user: JSON.parse(oat_user.user_data)
+      
     }
   end
 
   # # Optionally set additional headers for the JWT. See
   # # https://tools.ietf.org/html/rfc7515#section-4.1
-  # token_headers do |opts|
-  #   { kid: opts[:application][:uid] }
-  # end
+  token_headers do |opts|
+    { 
+      'typ': "JWT",
+      'alg': "HS256",
+      'kid': opts[:application][:uid],
+    }
+  end
 
   # # Use the application secret specified in the access grant token. Defaults to
   # # `false`. If you specify `use_application_secret true`, both `secret_key` and
   # # `secret_key_path` will be ignored.
   # use_application_secret false
+  use_application_secret true
+
 
   # # Set the encryption secret. This would be shared with any other applications
   # # that should be able to read the payload of the token. Defaults to "secret".
@@ -334,7 +379,7 @@ Doorkeeper::JWT.configure do
 
   # # Specify encryption type (https://github.com/progrium/ruby-jwt). Defaults to
   # # `nil`.
-  # encryption_method :hs512
+  encryption_method :hs256
 
 end
 
