@@ -2,8 +2,8 @@ class AuthenticationController < ApplicationController
   
   #form di login, ho parametro in sessione per redirect url e client id
   def new
-    unless session['client_id'].blank?
-      applicazione = Doorkeeper::Application.find_by uid: session['client_id']
+    unless session[:client_id].blank?
+      applicazione = Doorkeeper::Application.find_by uid: session[:client_id]
       if applicazione.blank?
         @errore = "Login non permesso!"
       else

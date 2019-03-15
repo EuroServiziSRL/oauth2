@@ -291,6 +291,9 @@ Doorkeeper.configure do
         oat_old = Doorkeeper::AccessGrant.where.not(id: oat_user.id ).where(resource_owner_id: hash_user['id'], application_id: hash_user['application_id'])
         oat_old.destroy_all
       end
+      #cancello la sessione
+      controller.request.session.delete(:client_id)
+      controller.request.session.delete('user')
     end
     
   end
