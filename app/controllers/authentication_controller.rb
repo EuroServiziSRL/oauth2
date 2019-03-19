@@ -5,6 +5,7 @@ class AuthenticationController < ApplicationController
     unless session[:client_id].blank?
       applicazione = Doorkeeper::Application.find_by uid: session[:client_id]
       if applicazione.blank?
+        logger.error "\n\n Applicazione con client_id #{session[:client_id]} non presente!   \n"
         @errore = "Login non permesso!"
       else
         @nome_ente = applicazione.name

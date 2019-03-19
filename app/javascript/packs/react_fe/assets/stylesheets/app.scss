@@ -1,14 +1,31 @@
 /* stili generali per applicazione */
 
-/* componente login_form */
+body{
+    background-color: #636363; 
+	  
 
-@media all and (min-width: 480px) {
-  .login {
-    padding: 30px 0;
-  }
+    #nuova_autenticazione{
+        
+        
+        /* componente login_form */
+        #react_component{
+          
+            .login {
+              padding: 10% 0;
+            }
+          
+            .login form {
+              margin: 0 auto;
+              max-width: 320px;
+              background-color: #fff;
+              padding: 25px;
+              z-index: 100;
+              opacity: 1;
+            }
+          
+        }
+        
+    }
 
-  .login form {
-    margin: 0 auto;
-    max-width: 320px;
-  }
+    
 }

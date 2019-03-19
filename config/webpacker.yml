@@ -31,6 +31,7 @@ default: &default
 development:
   <<: *default
   compile: true
+  extract_css: true #CSS REACT: permette di vedere i css importati da react
 
   # Reference: https://webpack.js.org/configuration/dev-server/
   dev_server:
@@ -38,7 +39,7 @@ development:
     host: localhost
     port: 3035
     public: localhost:3035
-    hmr: false
+    hmr: true
     # Inline should be set to true if using HMR
     inline: true
     overlay: true
@@ -67,3 +68,5 @@ production:
 
   # Cache manifest.json for performance
   cache_manifest: true
+  
+  extract_css: true

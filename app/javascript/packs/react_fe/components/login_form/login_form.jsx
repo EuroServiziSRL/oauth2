@@ -103,7 +103,7 @@ class LoginForm extends Component {
   render() {
     return(
       <div className="login">
-        <form onSubmit={this.handleSubmit}>
+        <form onSubmit={this.handleSubmit} className="rounded">
           <h3>{this.state.nomeEnte}</h3>
           <Form.Group controlId="username" size="lg">
               <Form.Label>Username</Form.Label>
