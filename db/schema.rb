@@ -37,7 +37,6 @@ ActiveRecord::Schema.define(version: 2019_03_12_121852) do
     t.datetime "created_at", null: false
     t.string "scopes"
     t.string "previous_refresh_token", default: "", null: false
-    t.text "user_data"
     t.index ["application_id"], name: "index_oauth_access_tokens_on_application_id"
     t.index ["resource_owner_id"], name: "index_oauth_access_tokens_on_resource_owner_id"
   end
@@ -53,6 +52,8 @@ ActiveRecord::Schema.define(version: 2019_03_12_121852) do
     t.datetime "updated_at", null: false
     t.string "image_url"
     t.string "tipo_login"
+    t.string "portal_url"
+    t.text "extra_info"
     t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true
   end
 

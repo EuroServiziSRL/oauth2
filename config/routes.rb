@@ -1,8 +1,10 @@
 Rails.application.routes.draw do
   
-  
-  #use_doorkeeper_openid_connect
-  use_doorkeeper
+  use_doorkeeper do
+    # it accepts :authorizations, :tokens, :token_info, :applications and :authorized_applications
+    #as :applications => 'custom_applications'
+    controllers :applications => 'doorkeeper/custom_applications'
+  end
   
   root to: "pages#root"
   get 'authentication/new'
