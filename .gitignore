@@ -29,11 +29,6 @@
 /node_modules
 /public/assets/
 
-# Ignore encrypted secrets key file.
-/config/secrets.yml.key
-/config/secrets.yml
-/config/master.key
-
 # ignore database.yml
 /config/database.yml
 /public/packs
@@ -49,3 +44,6 @@ config/database.yml
 config/settings.yml
 config/settings/production.yml
 yarn.lock
+
+# Ignore master key for decrypting credentials and more.
+/config/master.key
