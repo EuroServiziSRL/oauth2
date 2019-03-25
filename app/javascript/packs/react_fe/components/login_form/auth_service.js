@@ -97,10 +97,11 @@ export default class AuthService {
         })
         */
         // Get a token from api server using the fetch api
+        axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
         
         return axios.post(`${this.domain}/portal/autenticazione/login_jwe`,data).then(res => {
             console.log("Fatto login", res);
-            this.setToken(res.token) // Setting the token in localStorage
+            //this.setToken(res.token) // Setting the token in localStorage
             return Promise.resolve(res);
         })
     }
