@@ -5,6 +5,7 @@ import AuthService from './auth_service';
 import axios from 'axios';
 import url_parse from 'url-parse';
 
+import MyLoader from '../loader_modal/loader_modal';
 
 /* global $ */  /* uso jquery  */
 
@@ -17,13 +18,14 @@ class LoginForm extends Component {
       username: "",
       password: "",
       nomeEnte: props.nomeEnte,
-      redirectUri: props.redirectUri
+      redirectUri: props.redirectUri,
+      loading: false
     };
     
   }
   
   validateForm(){
-    return this.state.username.length > 0 && this.state.password.length > 0;
+    return this.state.username !== null && this.state.username.length > 0 && this.state.password !== null && this.state.password.length > 0;
   };
   
   
@@ -40,8 +42,16 @@ class LoginForm extends Component {
     this.state.password = null;
   }
   
+  renderLoader(){
+    console.log("chiamo renderloader");
+    return <MyLoader active={this.state.loading} />  
+  }
+  
   handleSubmit = event => {
+    this.state.loading = true;
+    this.renderLoader();
     event.preventDefault();
+    
     $("#msg_errore").addClass('d-none');
     let axiosConfig = {
       headers: {
@@ -104,6 +114,7 @@ class LoginForm extends Component {
     return(
       <div className="login">
         <form onSubmit={this.handleSubmit} className="rounded">
+          <h3>Accedi a</h3>
           <h3>{this.state.nomeEnte}</h3>
           <Form.Group controlId="username" size="lg">
               <Form.Label>Username</Form.Label>
@@ -133,6 +144,7 @@ class LoginForm extends Component {
             Login
           </Button>
         </form>
+        
       </div>
     )
   }
