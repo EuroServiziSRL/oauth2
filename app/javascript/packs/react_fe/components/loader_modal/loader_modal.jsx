@@ -5,6 +5,7 @@ import PulseLoader from 'react-spinners/PulseLoader';
 class MyLoader extends Component {
     
     constructor(props){
+        console.log(props)
         super(props);
        
         this.state = {
@@ -16,7 +17,7 @@ class MyLoader extends Component {
 
 
     componentWillReceiveProps(nextProps){
-        if(nextProps.active!==this.props.active){
+        if(nextProps.active !== this.state.active){
           console.log("setto active", nextProps.active);
         }
       }
@@ -24,8 +25,8 @@ class MyLoader extends Component {
 
     render() { 
         return (
-            <LoadingOverlay active={props.active} spinner={<PulseLoader />} classNamePrefix='MyLoader_' >
-              {props.children}
+            <LoadingOverlay active={this.state.active} spinner={<PulseLoader />} classNamePrefix='MyLoader_' >
+              {this.state.children}
             </LoadingOverlay>
         )
     }

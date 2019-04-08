@@ -44,13 +44,13 @@ class LoginForm extends Component {
   
   renderLoader(){
     console.log("chiamo renderloader");
-    return <MyLoader active={this.state.loading} />  
+    this.state.loading = true;   
   }
   
   handleSubmit = event => {
-    this.state.loading = true;
-    this.renderLoader();
     event.preventDefault();
+    
+    this.renderLoader();
     
     $("#msg_errore").addClass('d-none');
     let axiosConfig = {
@@ -58,7 +58,8 @@ class LoginForm extends Component {
           //'Content-Type': 'application/json',
           'Content-Type': 'application/json',
           'Accept': 'application/json', //fa vedere a rails che e' una richiesta json!
-          "Access-Control-Allow-Origin": "*"
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept"
       },
       responseType: 'json'
     };
@@ -144,7 +145,7 @@ class LoginForm extends Component {
             Login
           </Button>
         </form>
-        
+        <MyLoader active={this.state.loading} />
       </div>
     )
   }
