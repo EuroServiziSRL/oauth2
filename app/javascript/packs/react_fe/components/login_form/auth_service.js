@@ -96,10 +96,19 @@ export default class AuthService {
           })
         })
         */
-        // Get a token from api server using the fetch api
-        axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
-        
-        return axios.post(`${this.domain}/portal/autenticazione/login_jwe`,data).then(res => {
+        let axiosConfig = {
+          headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json', //fa vedere a rails che e' una richiesta json!
+              "Access-Control-Allow-Origin": "*",
+              "Access-Control-Allow-Headers": "*"
+          },
+          responseType: 'json'
+        };
+        //axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
+        //axios.defaults.headers.post['Access-Control-Allow-Headers'] = '*';
+        //axios.defaults.headers.post['Content-Type'] ='application/x-www-form-urlencoded';
+        return axios.post(`${this.domain}/portal/autenticazione/login_jwe`,data,axiosConfig).then(res => {
             console.log("Fatto login", res);
             //this.setToken(res.token) // Setting the token in localStorage
             return Promise.resolve(res);

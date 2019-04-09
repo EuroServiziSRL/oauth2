@@ -59,7 +59,8 @@ class LoginForm extends Component {
           'Content-Type': 'application/json',
           'Accept': 'application/json', //fa vedere a rails che e' una richiesta json!
           "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept"
+          "Access-Control-Allow-Headers": "*"
+          //"Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept"
       },
       responseType: 'json'
     };
