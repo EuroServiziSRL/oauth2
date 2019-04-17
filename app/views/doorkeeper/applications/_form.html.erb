@@ -50,6 +50,28 @@
       </span>
     </div>
   </div>
+  
+  <div class="form-group row">
+    <%= f.label :demo_site, 'Ente per demo ?', class: 'col-sm-2 form-check-label font-weight-bold' %>
+    <div class="col-sm-10">
+      <%= f.check_box :demo_site, class: "checkbox #{ 'is-invalid' if application.errors[:demo_site].present? }" %>
+      <%= doorkeeper_errors_for application, :demo_site %>
+      <span class="form-text text-secondary">
+        <%= t('doorkeeper.applications.help.demo_site') %>
+      </span>
+    </div>
+  </div>
+  
+  <div class="form-group row">
+    <%= f.label :mobile_app, 'Usa app nativa?', class: 'col-sm-2 form-check-label font-weight-bold' %>
+    <div class="col-sm-10">
+      <%= f.check_box :mobile_app, class: "checkbox #{ 'is-invalid' if application.errors[:mobile_app].present? }" %>
+      <%= doorkeeper_errors_for application, :mobile_app %>
+      <span class="form-text text-secondary">
+        <%= t('doorkeeper.applications.help.mobile_app') %>
+      </span>
+    </div>
+  </div>
 
   <div class="form-group row">
     <%= f.label :scopes, class: 'col-sm-2 col-form-label font-weight-bold' %>

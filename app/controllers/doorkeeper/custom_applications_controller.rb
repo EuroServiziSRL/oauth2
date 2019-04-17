@@ -6,7 +6,11 @@ module Doorkeeper
         before_action :set_application, only: %i[show edit update destroy]
     
         def index
-            @applications = Application.ordered_by(:created_at)
+            if params['demo_mode'] == 'true'
+              @applications = Application.where(demo_site: true).ordered_by(:created_at)
+            else
+              @applications = Application.where(demo_site: [nil, false]).ordered_by(:created_at)
+            end
             respond_to do |format|
                 format.html
                 format.json { render json: @applications }
@@ -77,7 +81,7 @@ module Doorkeeper
     
         def application_params
           params.require(:doorkeeper_application)
-            .permit(:name, :redirect_uri, :scopes, :confidential, :image_url, :tipo_login, :portal_url, :extra_info)
+            .permit(:name, :redirect_uri, :scopes, :confidential, :image_url, :tipo_login, :portal_url, :extra_info, :demo_site, :mobile_app, :demo_mode)
         end
     end
 

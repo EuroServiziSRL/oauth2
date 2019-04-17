@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_12_121852) do
+ActiveRecord::Schema.define(version: 2019_04_09_130629) do
 
   create_table "oauth_access_grants", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "resource_owner_id", null: false
@@ -54,6 +54,8 @@ ActiveRecord::Schema.define(version: 2019_03_12_121852) do
     t.string "tipo_login"
     t.string "portal_url"
     t.text "extra_info"
+    t.boolean "demo_site"
+    t.boolean "mobile_app"
     t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true
   end
 
