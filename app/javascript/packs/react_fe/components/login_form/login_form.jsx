@@ -9,6 +9,7 @@ import MyLoader from '../loader_modal/loader_modal';
 
 /* global $ */  /* uso jquery  */
 
+
 class LoginForm extends Component {
   
   constructor(props){
@@ -21,7 +22,9 @@ class LoginForm extends Component {
       redirectUri: props.redirectUri,
       loading: false
     };
-    
+    this.aggiornaStato = this.aggiornaStato.bind(this);
+    this.validateForm = this.validateForm.bind(this);
+    //this.renderLoader = this.renderLoader.bind(this);
   }
   
   validateForm(){
@@ -44,12 +47,18 @@ class LoginForm extends Component {
   
   renderLoader(){
     console.log("chiamo renderloader");
-    this.state.loading = true;   
+    this.setState({loading: true});   
+    console.log("stato loading corrente", this.state.loading);
+    
   }
+  
+  // renderLoader = () => {  console.log("chiamo renderloader");
+  //                         this.setState({loading: true})
+  //                         }
   
   handleSubmit = event => {
     event.preventDefault();
-    
+    console.log("Entro handlesubmit");
     this.renderLoader();
     
     $("#msg_errore").addClass('d-none');
@@ -103,6 +112,8 @@ class LoginForm extends Component {
                   $("#msg_errore").removeClass('d-none');
                   this.pulisciCampi();
                   $("#submit_login").attr('disabled','disabled');
+                  //fermo il loader
+                  this.setState({loading: false});
                }
                
             })
