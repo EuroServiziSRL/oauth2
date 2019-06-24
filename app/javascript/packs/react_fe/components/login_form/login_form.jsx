@@ -6,7 +6,7 @@ import axios from 'axios';
 import url_parse from 'url-parse';
 
 import MyLoader from '../loader_modal/loader_modal';
-
+import Jwt from 'jwt-simple';
 /* global $ */  /* uso jquery  */
 
 
@@ -94,7 +94,15 @@ class LoginForm extends Component {
                     //return Promise.resolve(res);
                     if(create_res.data.stato == 'ok'){
                       //ritorno su portale con sid e id utente e riprendo giro di oauth2
-                      let url = this.state.redirectUri+"?sid="+res.data.sid_sessione+"&id_utente="+res.data.dati_utente.id;
+                      var payload = { sid: res.data.sid_sessione, id_utente: res.data.dati_utente.id };
+                      
+                      //Secret fissa, usata quella di authhub..da env node dava problemi, e poi viene sempre messa in chiaro.
+                      //sarebbe da usare un servizio esterno che 
+                      var secret = '6rg1e8r6t1bv8rt1r7y7b86d8fsw8fe6bg1t61v8vsdfs8erer6c18168'; 
+                      
+                      var encryptedString = Jwt.encode(payload, secret);
+                      //let url = this.state.redirectUri+"?sid="+res.data.sid_sessione+"&id_utente="+res.data.dati_utente.id;
+                      let url = this.state.redirectUri+"?j="+encryptedString;
                       //console.log("url portale: ", url);
                       window.location.replace(url);
                       return false;
