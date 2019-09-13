@@ -9,7 +9,11 @@ module Doorkeeper
             if params['demo_mode'] == 'true'
               @applications = Application.where(demo_site: true).ordered_by(:created_at)
             else
-              @applications = Application.where(demo_site: [nil, false]).ordered_by(:created_at)
+              if request.format.to_s == "application/json" #caso app che mostra solo enti non di demo
+                @applications = Application.where(demo_site: [nil, false]).ordered_by(:created_at)
+              else #caso da web che vede tutti
+                @applications = Application.all.ordered_by(:created_at)
+              end
             end
             respond_to do |format|
                 format.html
@@ -73,6 +77,29 @@ module Doorkeeper
           end
         end
     
+        #ritorna le info dell'ente
+        def get_info_cid
+          hash_params = params.permit!
+          app_ente_info = {}
+          c_id = hash_params[:cid]
+          qs_app_ente = Application.where(uid: c_id)
+          unless qs_app_ente.blank?
+            #popolo hash 
+            app_ente = qs_app_ente[0]
+            app_ente_info[:client_id] = c_id
+            app_ente_info[:nome_ente] = app_ente.name
+            app_ente_info[:url_ente] = app_ente.portal_url 
+          end
+          
+          respond_to do |format|
+            #format.html { render app_ente_info }
+            format.json { render json: app_ente_info.to_json }
+          end
+          
+
+        end
+
+
         private
     
         def set_application
