@@ -60,7 +60,7 @@ group :test do
   gem 'chromedriver-helper'
 end
 
-gem 'doorkeeper', '= 5.0.2'
+gem 'doorkeeper', '= 5.0.3'
 gem 'doorkeeper-jwt', '= 0.3.0'
 gem 'grape', '= 1.2.3'
 gem 'rack', '= 2.2.2'
