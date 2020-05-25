@@ -9,7 +9,6 @@ import MyLoader from '../loader_modal/loader_modal';
 import Jwt from 'jwt-simple';
 /* global $ */  /* uso jquery  */
 
-
 class LoginForm extends Component {
   
   constructor(props){
@@ -24,13 +23,11 @@ class LoginForm extends Component {
     };
     this.aggiornaStato = this.aggiornaStato.bind(this);
     this.validateForm = this.validateForm.bind(this);
-    //this.renderLoader = this.renderLoader.bind(this);
   }
   
   validateForm(){
     return this.state.username !== null && this.state.username.length > 0 && this.state.password !== null && this.state.password.length > 0;
   };
-  
   
   aggiornaStato = event => {
     this.setState({
@@ -51,11 +48,7 @@ class LoginForm extends Component {
     console.log("stato loading corrente", this.state.loading);
     
   }
-  
-  // renderLoader = () => {  console.log("chiamo renderloader");
-  //                         this.setState({loading: true})
-  //                         }
-  
+
   handleSubmit = event => {
     event.preventDefault();
     console.log("Entro handlesubmit");
@@ -128,7 +121,6 @@ class LoginForm extends Component {
             .catch(err =>{
                 alert(err);
             })
-    
   };
   
   render() {

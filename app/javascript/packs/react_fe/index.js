@@ -12,8 +12,6 @@ import './assets/stylesheets/app.scss';
 
 /* global $ */  /* uso jquery  */
 
-
-
 // $(document).ready(function(){
   
 //   if($("#nome_ente").length > 0){
