@@ -5,6 +5,29 @@ module Doorkeeper
         before_action :authenticate_admin!
         before_action :set_application, only: %i[show edit update destroy]
     
+        #Controllo di avere un parametro jwt e di poterlo decodificare
+        def authenticate_admin!
+          jwt = params[:jwt] || session['auth']
+          unless jwt.blank?
+            begin
+              hash_token_decoded = JsonWebToken.decode(jwt) 
+              #verifico istante temporale
+              unless JsonWebToken.valid_token(hash_token_decoded)
+                redirect_to auth_mancante_path
+              end
+              session['auth'] = jwt
+            rescue => exc
+              logger.error "Oauth2: Problemi decodifica jwt per autenticazione: "+exc.message
+              logger.error exc.backtrace.join("\n")
+              redirect_to auth_mancante_path
+            end
+          else
+            redirect_to auth_mancante_path
+          end
+
+        end
+
+
         def index
             if params['demo_mode'] == 'true'
               @applications = Application.where(demo_site: true).ordered_by(:created_at)
@@ -105,7 +128,7 @@ module Doorkeeper
         def set_application
           @application = Application.find(params[:id])
         end
-    
+
         def application_params
           params.require(:doorkeeper_application)
             .permit(:name, :redirect_uri, :scopes, :confidential, :image_url, :tipo_login, :portal_url, :extra_info, :demo_site, :mobile_app, :demo_mode)

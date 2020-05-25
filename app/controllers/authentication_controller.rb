@@ -38,4 +38,10 @@ class AuthenticationController < ApplicationController
     end
   end
 
+     
+  def auth_mancante
+        
+  end
+
+
 end
