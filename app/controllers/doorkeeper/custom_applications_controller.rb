@@ -2,7 +2,7 @@ module Doorkeeper
     class CustomApplicationsController < ApplicationsController
         layout 'doorkeeper/admin' unless Doorkeeper.configuration.api_only
     
-        before_action :authenticate_admin!
+        before_action :authenticate_admin!, except: [:get_info_cid]
         before_action :set_application, only: %i[show edit update destroy]
     
         #Controllo di avere un parametro jwt e di poterlo decodificare
