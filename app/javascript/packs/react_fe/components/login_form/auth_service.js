@@ -76,10 +76,11 @@ export default class AuthService {
     // }
 
 
-    login(username, password) {
+    login(username, password, ricordami) {
         const data = {
             username: username,
-            password: password
+            password: password,
+            ricordami: ricordami
         }
         /*
         const { encrypt, decrypt } = jose(privateKey, publicKey)

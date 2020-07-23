@@ -17,6 +17,7 @@ class LoginForm extends Component {
     this.state = {
       username: "",
       password: "",
+      ricordami: false,
       nomeEnte: props.nomeEnte,
       redirectUri: props.redirectUri,
       loading: false
@@ -38,8 +39,10 @@ class LoginForm extends Component {
   pulisciCampi(){
     $("#username").val(null);
     $("#password").val(null);
+    $("#ricordami").val(false);
     this.state.username = null;
     this.state.password = null;
+    this.state.ricordami = false;
   }
   
   renderLoader(){
@@ -70,7 +73,7 @@ class LoginForm extends Component {
     var url_parsed = url_parse(this.state.redirectUri);
     var dominio = url_parsed.protocol+"//"+url_parsed.host;
     this.Auth = new AuthService(dominio);
-    this.Auth.login(this.state.username,this.state.password)
+    this.Auth.login(this.state.username,this.state.password,this.state.ricordami)
             .then(res =>{
                console.log("Fatto login al submit su Portale:",res)
                if(res.data.stato == 'ok'){
@@ -83,11 +86,13 @@ class LoginForm extends Component {
                   data[csrf_key] = csrf_val;
                   
                   axios.post('/authentication/create',data,axiosConfig).then(create_res => {
-                    console.log("Authentication Create:", create_res);
+                    //console.log("Authentication Create:", create_res);
                     //return Promise.resolve(res);
                     if(create_res.data.stato == 'ok'){
+                      console.log("RES DATA");
+                      console.log(res.data);
                       //ritorno su portale con sid e id utente e riprendo giro di oauth2
-                      var payload = { sid: res.data.sid_sessione, id_utente: res.data.dati_utente.id };
+                      var payload = { sid: res.data.sid_sessione, id_utente: res.data.dati_utente.id, ricordami: res.data.ricordami };
                       
                       //Secret fissa, usata quella di authhub..da env node dava problemi, e poi viene sempre messa in chiaro.
                       //sarebbe da usare un servizio esterno che 
@@ -145,6 +150,9 @@ class LoginForm extends Component {
               onChange={this.aggiornaStato}
               type="password"
             />
+          </Form.Group>
+          <Form.Group controlId="ricordami" size="lg">
+            <Form.Check type="checkbox" label="Rimani Connesso" onChange={this.aggiornaStato} />
           </Form.Group>
           <Button
             id="submit_login"

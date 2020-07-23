@@ -2,7 +2,7 @@ module Doorkeeper
     class CustomApplicationsController < ApplicationsController
         layout 'doorkeeper/admin' unless Doorkeeper.configuration.api_only
     
-        before_action :authenticate_admin!, except: [:get_info_cid]
+        before_action :authenticate_admin!, only: []
         before_action :set_application, only: %i[show edit update destroy]
     
         #Controllo di avere un parametro jwt e di poterlo decodificare
@@ -130,8 +130,7 @@ module Doorkeeper
         end
 
         def application_params
-          params.require(:doorkeeper_application)
-            .permit(:name, :redirect_uri, :scopes, :confidential, :image_url, :tipo_login, :portal_url, :extra_info, :demo_site, :mobile_app, :demo_mode)
+          params.require(:doorkeeper_application).permit(:name, :redirect_uri, :scopes, :confidential, :image_url, :tipo_login, :portal_url, :extra_info, :demo_site, :mobile_app, :demo_mode)
         end
     end
 
