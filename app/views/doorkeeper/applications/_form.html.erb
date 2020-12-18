@@ -17,7 +17,7 @@
       <%= f.text_area :portal_url, class: "form-control #{ 'is-invalid' if application.errors[:portal_url].present? }" %>
       <%= doorkeeper_errors_for application, :portal_url %>
       <span class="form-text text-secondary">
-        <%= t('doorkeeper.applications.help.portal_url') %>: Url della index del sito.
+        <%= t('doorkeeper.applications.help.portal_url') %>: Url della index del sito. (Es: https://dominio/portal/ )
       </span>
     </div>
   </div>
@@ -28,7 +28,7 @@
       <%= f.text_area :redirect_uri, class: "form-control #{ 'is-invalid' if application.errors[:redirect_uri].present? }" %>
       <%= doorkeeper_errors_for application, :redirect_uri %>
       <span class="form-text text-secondary">
-        <%= t('doorkeeper.applications.help.redirect_uri') %>. Url di callback dopo Oauth2.
+        <%= t('doorkeeper.applications.help.redirect_uri') %>. Url di callback dopo Oauth2. (Es: https://dominio/portal/auth/oauth2/callback )
       </span>
 
       <% if Doorkeeper.configuration.native_redirect_uri %>
@@ -90,7 +90,7 @@
       <%= f.text_field :image_url, class: "form-control #{ 'has-error' if application.errors[:image_url].present? }" %>
       <%= doorkeeper_errors_for application, :image_url %>
       <span class="form-text text-secondary">
-        <%= t('doorkeeper.applications.help.image_url') %>
+        <%= t('doorkeeper.applications.help.image_url') %> Url dello stemma dell'ente. (Es: https://dominio/public/img/stemma.png )
       </span>
     </div>
   </div>
