@@ -17,7 +17,7 @@ module Oes
     # the framework and any gems in your application.
     config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '*.{rb,yml}').to_s]
     config.i18n.default_locale = :it
-  
+    #config.time_zone = 'Rome' 
     #CORS
     #allow GET, POST or OPTIONS requests from any origin on any resource.
     config.middleware.insert_before 0, Rack::Cors do

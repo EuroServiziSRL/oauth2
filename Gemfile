@@ -5,7 +5,7 @@ ruby '2.6.3'
 
 gem 'rails', '= 5.2.4.3'
 # Use mysql as the database for Active Record
-gem 'mysql2', '= 0.4.10' #'>= 0.4.4', '< 0.6.0'
+gem 'mysql2', '>= 0.4.4', '< 0.6.0'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '= 5.0.7'
