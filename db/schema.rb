@@ -12,7 +12,7 @@
 
 ActiveRecord::Schema.define(version: 2019_04_09_130629) do
 
-  create_table "oauth_access_grants", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "oauth_access_grants", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.bigint "resource_owner_id", null: false
     t.bigint "application_id", null: false
     t.string "token", null: false
@@ -24,10 +24,9 @@ ActiveRecord::Schema.define(version: 2019_04_09_130629) do
     t.text "user_data"
     t.index ["application_id"], name: "index_oauth_access_grants_on_application_id"
     t.index ["resource_owner_id"], name: "index_oauth_access_grants_on_resource_owner_id"
-    t.index ["token"], name: "index_oauth_access_grants_on_token", unique: true
   end
 
-  create_table "oauth_access_tokens", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "oauth_access_tokens", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.bigint "resource_owner_id"
     t.bigint "application_id"
     t.text "token", null: false
@@ -41,7 +40,7 @@ ActiveRecord::Schema.define(version: 2019_04_09_130629) do
     t.index ["resource_owner_id"], name: "index_oauth_access_tokens_on_resource_owner_id"
   end
 
-  create_table "oauth_applications", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "oauth_applications", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "name", null: false
     t.string "uid", null: false
     t.string "secret", null: false
@@ -56,7 +55,6 @@ ActiveRecord::Schema.define(version: 2019_04_09_130629) do
     t.text "extra_info"
     t.boolean "demo_site"
     t.boolean "mobile_app"
-    t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true
   end
 
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
