@@ -62,6 +62,6 @@ end
 gem 'doorkeeper', '= 5.0.3'
 gem 'doorkeeper-jwt', '= 0.3.0'
 gem 'grape', '= 1.2.3'
-gem 'rack', '= 2.2.2'
+gem 'rack', '2.2.6.2'
 gem 'rack-cors', '= 1.1.1', require: 'rack/cors'
 gem 'rubyzip', '= 2.3.0'
